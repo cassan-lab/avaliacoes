@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questões de Residência - Sistemas de Informação em Saúde</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light gray-blue background */
+        }
+        .question-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        .question-card:hover {
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .option {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .option:hover {
+            background-color: #f9fafb;
+            border-color: #2563eb;
+        }
+        .correct {
+            background-color: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #166534;
+        }
+        .incorrect {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b;
+        }
+        .answer-reveal {
+            display: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+            border-left: 4px solid #2563eb;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+
+        <header class="text-center mb-8 bg-white p-6 rounded-xl shadow-lg sticky top-0 z-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-800 mb-2">Quiz Interativo: Sistemas de Saúde</h1>
+            <p class="text-gray-600">Teste seus conhecimentos para as provas de residência médica.</p>
+            <div class="mt-4 bg-blue-50 p-4 rounded-lg">
+                <h2 class="text-xl font-semibold text-blue-700">Seu Desempenho</h2>
+                <p class="text-2xl font-bold text-blue-900 mt-1">
+                    <span id="correct-answers">0</span> de <span id="total-questions">0</span> Acertos (<span id="percentage">0</span>%)
+                </p>
+            </div>
+        </header>
+
+        <main id="quiz-container">
+            <!-- As questões serão injetadas aqui pelo JavaScript -->
+        </main>
+
+    </div>
+
+    <script>
+        const questionsData = [
+            // SIM: Sistema de Informação sobre Mortalidade
+            {
+                system: "SIM: Sistema de Informação sobre Mortalidade",
+                questions: [
+                    {
+                        source: "UERJ / 2023",
+                        text: "O Sistema de Informação sobre Mortalidade (SIM) é o mais antigo sistema de informação em saúde de abrangência nacional no Brasil. Sua operação depende fundamentalmente do preenchimento correto de um documento específico que alimenta sua base de dados. Qual é o instrumento de coleta de dados exclusivo do SIM?",
+                        options: [
+                            "Autorização de Internação Hospitalar (AIH)",
+                            "Declaração de Nascido Vivo (DN)",
+                            "Ficha Individual de Notificação (FIN)",
+                            "Declaração de Óbito (DO)",
+                            "Boletim de Produção Ambulatorial (BPA)"
+                        ],
+                        correctAnswer: 3,
+                        comment: "A questão aborda o ponto mais fundamental e cobrado sobre o SIM: sua fonte de dados. O único instrumento que alimenta o SIM é a Declaração de Óbito (DO), documento padronizado e obrigatório para todos os óbitos no país. As demais alternativas correspondem a outros sistemas (SIH, SINASC, SINAN, SIA)."
+                    },
+                    {
+                        source: "USP-SP / 2022",
+                        text: "Um gestor de saúde municipal precisa analisar as principais causas de morte em sua população no último ano para planejar ações de prevenção. Ele deseja construir indicadores como a taxa de mortalidade geral e a mortalidade proporcional por grupos de causas (doenças infecciosas, neoplasias, causas externas). Qual sistema de informação do SUS fornecerá os dados primários para essa análise?",
+                        options: ["SINASC", "SINAN", "SIM", "SIH", "SIA"],
+                        correctAnswer: 2,
+                        comment: "A finalidade primordial do SIM é exatamente a descrita no enunciado: coletar, processar e disseminar dados sobre mortalidade para permitir a construção de perfis epidemiológicos e o cálculo de indicadores de mortalidade."
+                    },
+                    {
+                        source: "AMRIGS / 2023",
+                        text: "A Declaração de Óbito (DO) é um documento emitido em três vias autocopiativas, cada uma com uma destinação específica para garantir o fluxo da informação e os trâmites legais. Assinale a alternativa que descreve corretamente o destino das três vias da DO.",
+                        options: [
+                            "1ª via para a família, 2ª via para o cartório, 3ª via para o hospital.",
+                            "1ª via para a secretaria de saúde, 2ª via para o prontuário do paciente, 3ª via para o cartório de registro civil.",
+                            "1ª via para o Ministério da Saúde, 2ª via para a secretaria estadual de saúde, 3ª via para a secretaria municipal de saúde.",
+                            "1ª via para o cartório, 2ª via para o médico que atestou o óbito, 3ª via para a funerária.",
+                            "1ª via para o prontuário, 2ª via para a família, 3ª via para a secretaria de saúde."
+                        ],
+                        correctAnswer: 1,
+                        comment: "O fluxo da Declaração de Óbito é um conhecimento específico que pode ser cobrado. A DO é emitida em três vias com destinos definidos: secretaria de saúde (para alimentar o SIM), prontuário (quando aplicável) e cartório (para a emissão da certidão de óbito)."
+                    },
+                     {
+                        source: "SUS-BA / 2024",
+                        text: "Para o cálculo do Coeficiente de Mortalidade Infantil (CMI), um dos indicadores mais importantes da saúde pública, é necessária a combinação de dados de dois sistemas de informação distintos. Quais são esses sistemas?",
+                        options: ["SIM e SINAN", "SINASC e SIH", "SIM e SINASC", "SINAN e SIA", "SIH e SIM"],
+                        correctAnswer: 2,
+                        comment: "Esta é uma questão clássica que testa a inter-relação entre sistemas. O cálculo do CMI exige o número de óbitos em menores de um ano (numerador, fornecido pelo SIM) e o número de nascidos vivos no mesmo período (denominador, fornecido pelo SINASC)."
+                    },
+                    {
+                        source: "ENARE / 2023",
+                        text: "Sobre o Sistema de Informação sobre Mortalidade (SIM), é correto afirmar que:",
+                        options: [
+                            "Foi implantado na década de 1990, juntamente com o SINASC.",
+                            "Sua principal finalidade é o controle de custos com internações que evoluem para óbito.",
+                            "É alimentado por múltiplos formulários, incluindo a Ficha de Investigação de Óbito.",
+                            "É o sistema de informação em saúde mais antigo do Brasil com abrangência nacional, estabelecido em 1975.",
+                            "Seus dados são confidenciais e restritos aos gestores do Ministério da Saúde."
+                        ],
+                        correctAnswer: 3,
+                        comment: "A questão testa conhecimentos gerais sobre o SIM. A alternativa correta destaca sua característica histórica de ser o sistema mais antigo, datado de 1975. As outras alternativas estão incorretas: ele é de 1975, não de 1990 (A); sua finalidade é epidemiológica, não de custos (B); é alimentado exclusivamente pela DO (C); e seus dados são públicos via DATASUS/TABNET (E)."
+                    }
+                ]
+            },
+            // SINASC: Sistema de Informações sobre Nascidos Vivos
+            {
+                system: "SINASC: Sistema de Informações sobre Nascidos Vivos",
+                questions: [
+                    {
+                        source: "UNICAMP / 2023",
+                        text: "O Sistema de Informações sobre Nascidos Vivos (SINASC) é a principal fonte de dados para a construção do perfil dos nascimentos no Brasil e para o monitoramento da saúde materno-infantil. O instrumento de coleta que alimenta este sistema é a:",
+                        options: ["Declaração de Óbito (DO)", "Declaração de Nascido Vivo (DN)", "Autorização de Internação Hospitalar (AIH)", "Ficha de Notificação Compulsória (FIN)", "Caderneta da Gestante"],
+                        correctAnswer: 1,
+                        comment: "Assim como no SIM, a associação entre o sistema e seu documento-fonte é o conhecimento mais cobrado. O SINASC é alimentado pela Declaração de Nascido Vivo (DN), preenchida obrigatoriamente para todo nascimento ocorrido em território nacional."
+                    },
+                    {
+                        source: "SUS-SP / 2022",
+                        text: "Uma equipe de saúde da família deseja avaliar a qualidade da atenção pré-natal em sua área de abrangência. Para isso, precisam de dados como o número de consultas de pré-natal realizadas pelas gestantes, o tipo de parto, o peso ao nascer e o índice de Apgar dos recém-nascidos. Qual sistema de informação é a fonte primária para obter esses dados de forma sistematizada?",
+                        options: ["SIH", "SISVAN", "SIAB", "SINASC", "SIM"],
+                        correctAnswer: 3,
+                        comment: "A questão explora as variáveis coletadas pelo SINASC. Todas as informações listadas (consultas de pré-natal, tipo de parto, peso ao nascer, Apgar) são campos presentes na Declaração de Nascido Vivo e, portanto, consolidadas no SINASC, tornando-o a ferramenta ideal para a análise proposta."
+                    }
+                ]
+            },
+            // SINAN: Sistema de Informação de Agravos de Notificação
+            {
+                system: "SINAN: Sistema de Informação de Agravos de Notificação",
+                questions: [
+                     {
+                        source: "IAMSPE / 2022",
+                        text: "O Sistema de Informação de Agravos de Notificação (SINAN) é a principal ferramenta da vigilância epidemiológica para o monitoramento de doenças e agravos de notificação compulsória. Qual é o instrumento de coleta de dados que inicia o fluxo de informação neste sistema?",
+                        options: ["Declaração de Óbito (DO)", "Prontuário Eletrônico do Cidadão (PEC)", "Ficha Individual de Notificação (FIN)", "Autorização de Internação Hospitalar (AIH)", "Cartão Nacional de Saúde (CNS)"],
+                        correctAnswer: 2,
+                        comment: "A Ficha Individual de Notificação (FIN) é o documento-fonte do SINAN. É por meio do seu preenchimento, diante de um caso suspeito de agravo de notificação compulsória, que a informação é inserida no sistema para fins de vigilância."
+                    },
+                    {
+                        source: "SCMSP / 2022",
+                        text: "Um médico atende um paciente com suspeita de febre amarela, uma doença de alto potencial de disseminação e que consta na lista de notificação compulsória imediata. De acordo com as normas da vigilância em saúde, qual é o prazo e o procedimento correto para a notificação deste caso?",
+                        options: [
+                            "Notificação semanal, a ser consolidada e enviada ao final da semana epidemiológica.",
+                            "Notificação imediata, em até 24 horas a partir da suspeita, por meio do canal de comunicação mais rápido disponível.",
+                            "Notificação imediata, em até 48 horas, após a confirmação laboratorial do caso.",
+                            "Notificação mensal, junto com os demais agravos de menor risco.",
+                            "A notificação só é necessária se o paciente for internado, sendo realizada via SIH."
+                        ],
+                        correctAnswer: 1,
+                        comment: "A questão testa o conhecimento sobre os tipos e prazos de notificação. Doenças de alto risco, como febre amarela, exigem notificação imediata, que deve ser feita em até 24 horas da suspeita (e não da confirmação). O prazo de 48 horas é um distrator comum."
+                    }
+                ]
+            },
+             // SIA e SIH
+            {
+                system: "SIA e SIH: Sistemas de Informação Ambulatorial e Hospitalar",
+                questions: [
+                    {
+                        source: "Estratégia MED / 2023",
+                        text: "Entre os Sistemas de Informação em Saúde (SIS) pertencentes ao Sistema Único de Saúde (SUS), qual deles apresenta o Boletim de Produção Ambulatorial (BPA) e a Autorização de Procedimento de Alta Complexidade (APAC) como fontes de registro para sua alimentação?",
+                        options: ["SIM", "SINASC", "SIA-SUS", "SINAN", "SIH-SUS"],
+                        correctAnswer: 2,
+                        comment: "Esta é uma questão clássica de associação entre sistema e documento-fonte. O Sistema de Informação Ambulatorial (SIA-SUS) é o que utiliza o BPA (para procedimentos de média complexidade) e a APAC (para procedimentos de alta complexidade, como quimio e radioterapia) para registrar a produção ambulatorial e gerar o faturamento."
+                    },
+                     {
+                        source: "IFF-RJ / 2023",
+                        text: "Em relação ao SIH-SUS (Sistema de Informações Hospitalares do Sistema Único de Saúde), é CORRETO afirmar que:",
+                        options: [
+                             "Trata-se de uma base de dados administrativa, de abrangência nacional, cuja principal finalidade é o reembolso financeiro às unidades de saúde por internações.",
+                             "Seu principal instrumento de coleta é o Boletim de Produção Ambulatorial (BPA).",
+                             "É um sistema focado na vigilância epidemiológica de doenças que requerem internação.",
+                             "Seu uso é restrito a hospitais públicos, não incluindo prestadores de serviço conveniados.",
+                             "A principal informação registrada é o número de consultas especializadas realizadas no hospital."
+                        ],
+                        correctAnswer: 0,
+                        comment: "A questão testa a finalidade do SIH. Sua função primordial é administrativa e financeira, servindo como base para o pagamento (reembolso) dos serviços de internação hospitalar prestados ao SUS. Seu documento é a AIH, não o BPA (B). Sua finalidade não é primariamente epidemiológica (C). Ele abrange hospitais públicos e conveniados (D) e registra internações, não consultas (E)."
+                    }
+                ]
+            },
+            // e-SUS AB e SIAB
+            {
+                system: "e-SUS AB (SISAB) e SIAB",
+                questions: [
+                    {
+                        source: "ENARE / 2023",
+                        text: "A coleta de dados na Atenção Primária à Saúde (APS) passou por uma grande modernização com a transição do Sistema de Informação da Atenção Básica (SIAB) para o Sistema de Informação em Saúde para a Atenção Básica (SISAB), operacionalizado pela estratégia e-SUS AB. A mudança mais fundamental nessa transição foi:",
+                        options: [
+                            "A substituição do registro em papel por um sistema exclusivamente online.",
+                            "A mudança de um sistema com dados consolidados e agregados para um sistema com registros individualizados por cidadão.",
+                            "A restrição da coleta de dados apenas para médicos e enfermeiros.",
+                            "A fusão do sistema da atenção primária com o sistema de informação hospitalar.",
+                            "A eliminação da necessidade de cadastrar as famílias no território."
+                        ],
+                        correctAnswer: 1,
+                        comment: "Esta questão foca no ponto crucial da evolução do SIAB para o SISAB. A principal transformação foi a mudança na lógica do registro: o SIAB trabalhava com dados agregados por área, enquanto o SISAB, por meio do e-SUS AB, passou a coletar dados individualizados, permitindo o acompanhamento longitudinal do paciente."
+                    }
+                ]
+            },
+            // SI-PNI
+            {
+                system: "SI-PNI: Sistema de Informação do Programa Nacional de Imunizações",
+                questions: [
+                    {
+                        source: "FESF SUS-BA / 2022",
+                        text: "O Sistema de Informação do Programa Nacional de Imunizações (SI-PNI) é uma ferramenta essencial para a gestão da vacinação no Brasil. Além de registrar as doses aplicadas, o sistema possui funcionalidades gerenciais cruciais. Assinale a alternativa que descreve uma das principais funcionalidades de gestão do SI-PNI.",
+                        options: [
+                            "Realizar o agendamento online de vacinas para os cidadãos.",
+                            "Faturar os custos de cada vacina aplicada para repasse aos municípios.",
+                            "Possibilitar o controle do estoque de imunobiológicos, gerando informações para programar a aquisição e a distribuição.",
+                            "Integrar-se diretamente com o sistema de prontuário de hospitais privados.",
+                            "Cadastrar novos tipos de vacinas desenvolvidas pela indústria farmacêutica."
+                        ],
+                        correctAnswer: 2,
+                        comment: "As provas costumam cobrar as funções de gestão do SI-PNI, que vão além do simples registro. O controle de estoque é uma das mais importantes, pois garante o abastecimento da rede, sendo frequentemente a resposta correta em questões que listam as funcionalidades do sistema."
+                    }
+                ]
+            },
+            // SISVAN
+            {
+                system: "SISVAN: Sistema de Vigilância Alimentar e Nutricional",
+                questions: [
+                    {
+                        source: "UNCISAL / 2020",
+                        text: "O Sistema de Vigilância Alimentar e Nutricional (SISVAN) foi estabelecido nacionalmente na década de 1990 e tem como função principal:",
+                        options: [
+                            "Distribuir cestas básicas para famílias com crianças em risco nutricional.",
+                            "Acompanhar exclusivamente o estado nutricional de gestantes e crianças menores de 2 anos.",
+                            "Orientar a formulação de políticas públicas de alimentação e nutrição.",
+                            "Realizar o faturamento de consultas com nutricionistas na rede SUS.",
+                            "Fazer o diagnóstico puramente descritivo da situação alimentar, sem subsidiar ações."
+                        ],
+                        correctAnswer: 2,
+                        comment: "A questão foca na finalidade estratégica do SISVAN. Embora ele colete dados e descreva a situação nutricional, seu objetivo maior é transformar esses dados em informação para subsidiar a tomada de decisão e a formulação de políticas públicas, como programas de combate à obesidade ou à desnutrição."
+                    }
+                ]
+            },
+            // SISCAN
+            {
+                system: "SISCAN: Sistema de Informação do Câncer",
+                questions: [
+                    {
+                        source: "USP-RP / 2023",
+                        text: "O Sistema de Informação do Câncer (SISCAN) unificou os antigos sistemas de controle dos cânceres de colo do útero e de mama (SISCOLO e SISMAMA). Uma de suas características mais importantes, que o qualifica como uma ferramenta de gestão do cuidado, é:",
+                        options: [
+                            "O faturamento dos exames de rastreamento para o Ministério da Saúde.",
+                            "A emissão de laudos online diretamente para a paciente.",
+                            "O módulo de seguimento, que permite o acompanhamento ativo de mulheres com exames alterados.",
+                            "O agendamento de mamografias e exames citopatológicos pela internet.",
+                            "O cadastro de todos os casos de câncer do país, incluindo os da rede privada."
+                        ],
+                        correctAnswer: 2,
+                        comment: "O grande diferencial do SISCAN, e um ponto muito relevante para provas, é o seu módulo de seguimento. Ele não apenas registra o resultado do exame, mas também permite gerenciar a linha de cuidado, garantindo que uma mulher com resultado alterado seja investigada e tratada adequadamente."
+                    }
+                ]
+            },
+            // CNES e CNS
+            {
+                system: "CNES e CNS: Cadastros Fundacionais",
+                questions: [
+                    {
+                        source: "UERJ / 2023",
+                        text: "Os cadastros são a base para a organização de todo o sistema de saúde. No âmbito do SUS, existem dois cadastros fundamentais com finalidades distintas. Assinale a alternativa que descreve corretamente a diferença entre o Cadastro Nacional de Estabelecimentos de Saúde (CNES) e o Cartão Nacional de Saúde (CNS).",
+                        options: [
+                            "O CNES cadastra os profissionais de saúde, enquanto o CNS cadastra os gestores.",
+                            "O CNES cadastra os estabelecimentos de saúde (hospitais, clínicas), enquanto o CNS cadastra os usuários (pacientes).",
+                            "O CNES é obrigatório para serviços públicos, e o CNS para serviços privados.",
+                            "O CNES é um sistema de faturamento, e o CNS é um sistema de agendamento.",
+                            "O CNES cadastra os usuários, e o CNS cadastra os estabelecimentos de saúde."
+                        ],
+                        correctAnswer: 1,
+                        comment: "Esta é a distinção mais clássica e essencial entre os dois cadastros: CNES é o 'RG' dos estabelecimentos de saúde, e o CNS é o 'RG' dos cidadãos dentro do SUS. Trocar essa definição é um erro comum que as bancas exploram."
+                    }
+                ]
+            },
+            // SIOPS
+            {
+                system: "SIOPS: Sistema de Informações sobre Orçamentos Públicos em Saúde",
+                questions: [
+                    {
+                        source: "QConcursos / 2022",
+                        text: "O Sistema de Informações sobre Orçamentos Públicos em Saúde (SIOPS) é uma ferramenta de registro de receitas e despesas em saúde de todos os entes federados. Sobre esse sistema, é correto afirmar que:",
+                        options: [
+                            "O SIOPS permite o monitoramento do cumprimento da aplicação mínima de recursos em ações e serviços públicos de saúde.",
+                            "Os gestores devem informar suas receitas e despesas anualmente no sistema.",
+                            "O preenchimento é obrigatório, mas sua ausência não implica em sanções administrativas.",
+                            "O acesso ao relatório é restrito aos Tribunais de Contas para fins de auditoria.",
+                            "As informações são provenientes do SINAN, para calcular o custo do tratamento de doenças notificadas."
+                        ],
+                        correctAnswer: 0,
+                        comment: "A principal e mais testada finalidade do SIOPS é ser o instrumento de monitoramento da aplicação dos percentuais mínimos de investimento em saúde por municípios, estados e União, conforme determina a legislação. A alimentação é bimestral (B), a ausência de preenchimento gera sanções (C), o acesso é público (D) e os dados são contábeis (E)."
+                    }
+                ]
+            }
+        ];
+
+        const quizContainer = document.getElementById('quiz-container');
+        const correctAnswersSpan = document.getElementById('correct-answers');
+        const totalQuestionsSpan = document.getElementById('total-questions');
+        const percentageSpan = document.getElementById('percentage');
+
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let questionCounter = 0;
+
+        questionsData.forEach(systemData => {
+            const systemTitle = document.createElement('h2');
+            systemTitle.className = 'text-2xl font-bold text-blue-700 mb-4 mt-6 border-b-2 border-blue-200 pb-2';
+            systemTitle.textContent = systemData.system;
+            quizContainer.appendChild(systemTitle);
+
+            systemData.questions.forEach(question => {
+                totalQuestions++;
+                questionCounter++;
+
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question-card';
+                questionElement.id = `question-${questionCounter}`;
+
+                const source = document.createElement('p');
+                source.className = 'text-sm text-gray-500 font-semibold mb-2';
+                source.textContent = `Questão ${questionCounter} (${question.source})`;
+                questionElement.appendChild(source);
+
+                const text = document.createElement('p');
+                text.className = 'text-lg text-gray-800 mb-4';
+                text.textContent = question.text;
+                questionElement.appendChild(text);
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+                question.options.forEach((optionText, index) => {
+                    const option = document.createElement('div');
+                    option.className = 'option';
+                    option.textContent = optionText;
+                    option.dataset.index = index;
+                    optionsContainer.appendChild(option);
+                });
+                questionElement.appendChild(optionsContainer);
+
+                const answerReveal = document.createElement('div');
+                answerReveal.className = 'answer-reveal';
+                answerReveal.innerHTML = `<p class="font-bold text-blue-800">Gabarito e Comentário:</p><p class="mt-2 text-gray-700">${question.comment}</p>`;
+                questionElement.appendChild(answerReveal);
+
+                quizContainer.appendChild(questionElement);
+            });
+        });
+
+        totalQuestionsSpan.textContent = totalQuestions;
+
+        quizContainer.addEventListener('click', function(event) {
+            if (!event.target.classList.contains('option')) return;
+
+            const selectedOption = event.target;
+            const optionsContainer = selectedOption.parentElement;
+            const questionCard = optionsContainer.parentElement;
+
+            if (questionCard.classList.contains('answered')) return;
+            questionCard.classList.add('answered');
+
+            const selectedIndex = parseInt(selectedOption.dataset.index);
+            const questionId = parseInt(questionCard.id.split('-')[1]);
+            
+            let questionData;
+            let cumulativeQuestions = 0;
+            for(const system of questionsData) {
+                if (questionId <= cumulativeQuestions + system.questions.length) {
+                    questionData = system.questions[questionId - cumulativeQuestions - 1];
+                    break;
+                }
+                cumulativeQuestions += system.questions.length;
+            }
+
+            const correctAnswerIndex = questionData.correctAnswer;
+            
+            if (selectedIndex === correctAnswerIndex) {
+                selectedOption.classList.add('correct');
+                correctAnswers++;
+            } else {
+                selectedOption.classList.add('incorrect');
+                const correctOption = optionsContainer.querySelector(`[data-index='${correctAnswerIndex}']`);
+                correctOption.classList.add('correct');
+            }
+
+            const answerReveal = questionCard.querySelector('.answer-reveal');
+            answerReveal.style.display = 'block';
+
+            updateScore();
+        });
+
+        function updateScore() {
+            correctAnswersSpan.textContent = correctAnswers;
+            const answeredCount = document.querySelectorAll('.question-card.answered').length;
+            const percentage = answeredCount === 0 ? 0 : Math.round((correctAnswers / answeredCount) * 100);
+            percentageSpan.textContent = percentage;
+        }
+
+    </script>
+</body>
+</html>
