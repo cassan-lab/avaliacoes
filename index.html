@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIS nas Provas de Residência Médica</title>
+    <title>Sistemas de Informação em Saúde</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,7 +46,7 @@
 
         <header class="text-center mb-12">
             <h1 class="text-4xl md:text-5xl font-bold text-white mb-2">Sistemas de Informação em Saúde (SIS)</h1>
-            <p class="text-xl text-[#ffa600]">Um Guia Essencial para as Provas de Residência Médica</p>
+            <p class="text-xl text-[#ffa600]">Um Guia Essencial</p>
         </header>
 
         <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -56,14 +56,6 @@
                 <p class="text-lg">
                     Os Sistemas de Informação em Saúde são a espinha dorsal da gestão e do planejamento no SUS. Para os médicos residentes, compreendê-los é fundamental, pois as provas de residência frequentemente testam a capacidade do candidato de interpretar dados epidemiológicos, entender a organização da rede de saúde e aplicar conceitos de saúde coletiva. Questões sobre indicadores, notificação de doenças e financiamento são diretamente baseadas nos dados coletados por estes sistemas.
                 </p>
-            </div>
-            
-            <div class="md:col-span-2 lg:col-span-3 bg-white rounded-lg shadow-xl p-6">
-                <h2 class="text-2xl font-bold text-[#003f5c] mb-4 text-center">Frequência dos Sistemas nas Provas</h2>
-                 <p class="text-center text-gray-600 mb-6">Esta é uma estimativa da probabilidade de encontrar questões sobre cada sistema ou grupo de sistemas nas provas de residência mais recentes. Os sistemas epidemiológicos são, de longe, os mais cobrados.</p>
-                <div class="chart-container">
-                    <canvas id="systemsChart"></canvas>
-                </div>
             </div>
 
             <div class="md:col-span-2 lg:col-span-3 bg-white rounded-lg shadow-xl p-6">
@@ -149,7 +141,13 @@
                     </div>
                 </div>
             </div>
-
+ <div class="md:col-span-2 lg:col-span-3 bg-white rounded-lg shadow-xl p-6">
+                <h2 class="text-2xl font-bold text-[#003f5c] mb-4 text-center">Frequência dos Sistemas nas Provas</h2>
+                 <p class="text-center text-gray-600 mb-6">Esta é uma estimativa da probabilidade de encontrar questões sobre cada sistema ou grupo de sistemas nas provas de residência mais recentes. Os sistemas epidemiológicos são, de longe, os mais cobrados.</p>
+                <div class="chart-container">
+                    <canvas id="systemsChart"></canvas>
+                </div>
+            </div>
         </main>
 
         <footer class="text-center mt-12 text-white/70">
@@ -232,4 +230,5 @@
 </script>
 
 </body>
+
 </html>
